@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mt-5">
+    <div class="col-md-10 mx-auto text-center">
+        <h1 class="display-4">Welcome to Our Service Center</h1>
+        <p class="lead mt-3">Professional services for all your needs</p>
+        {% if not session.user_id %}
+        <div class="mt-4">
+            <a href="{{ url_for('main.register') }}" class="btn btn-primary btn-lg me-2">Get Started</a>
+            <a href="{{ url_for('main.login') }}" class="btn btn-outline-primary btn-lg">Login</a>
+        </div>
+        {% else %}
+        <div class="mt-4">
+            <a href="{{ url_for('main.book_appointment') }}" class="btn btn-primary btn-lg">Book Appointment Now</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-12">
+        <h2 class="text-center mb-4">Our Services</h2>
+        <div class="row g-4">
+            {% for service in services %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card service-card">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">{{ service.service_name }}</h5>
+                        <p class="card-text text-muted">{{ service.description }}</p>
+                        <p class="h4 text-success mt-3">₱{{ "%.2f"|format(service.price) }}</p>
+                        {% if session.user_id %}
+                        <a href="{{ url_for('main.book_appointment') }}?service={{ service.service_id }}" 
+                           class="btn btn-outline-primary btn-sm mt-2">Book Now</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5 mb-5">
+    <div class="col-md-4">
+        <div class="text-center p-4">
+            <div class="display-6 text-primary mb-3">📅</div>
+            <h5>Easy Booking</h5>
+            <p class="text-muted">Book your appointments in just a few clicks</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="text-center p-4">
+            <div class="display-6 text-primary mb-3">⚡</div>
+            <h5>Quick Service</h5>
+            <p class="text-muted">Fast and efficient service delivery</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="text-center p-4">
+            <div class="display-6 text-primary mb-3">✓</div>
+            <h5>Reliable</h5>
+            <p class="text-muted">Professional and trustworthy service</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

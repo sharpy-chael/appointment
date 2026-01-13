@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="mb-4">My Appointments</h2>
+        
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="btn-group" role="group">
+                    <a href="{{ url_for('main.my_appointments', status='all') }}" 
+                       class="btn btn-outline-primary {% if filter_status == 'all' %}active{% endif %}">
+                        All
+                    </a>
+                    <a href="{{ url_for('main.my_appointments', status='pending') }}" 
+                       class="btn btn-outline-warning {% if filter_status == 'pending' %}active{% endif %}">
+                        Pending
+                    </a>
+                    <a href="{{ url_for('main.my_appointments', status='confirmed') }}" 
+                       class="btn btn-outline-info {% if filter_status == 'confirmed' %}active{% endif %}">
+                        Confirmed
+                    </a>
+                    <a href="{{ url_for('main.my_appointments', status='completed') }}" 
+                       class="btn btn-outline-success {% if filter_status == 'completed' %}active{% endif %}">
+                        Completed
+                    </a>
+                    <a href="{{ url_for('main.my_appointments', status='cancelled') }}" 
+                       class="btn btn-outline-secondary {% if filter_status == 'cancelled' %}active{% endif %}">
+                        Cancelled
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        {% if appointments %}
+        <div class="row g-4">
+            {% for appointment in appointments %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ appointment.service.service_name }}</h5>
+                        <p class="card-text">{{ appointment.service.description }}</p>
+                        <hr>
+                        <p class="mb-1"><strong>Date:</strong> {{ appointment.date.strftime('%B %d, %Y') }}</p>
+                        <p class="mb-1"><strong>Time:</strong> {{ appointment.time.strftime('%I:%M %p') }}</p>
+                        <p class="mb-1"><strong>Price:</strong> <span class="text-success">₱{{ "%.2f"|format(appointment.service.price) }}</span></p>
+                        <p class="mb-3">
+                            <strong>Status:</strong>
+                            {% if appointment.status.Status_name == 'Pending' %}
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            {% elif appointment.status.Status_name == 'Confirmed' %}
+                                <span class="badge bg-info">Confirmed</span>
+                            {% elif appointment.status.Status_name == 'Completed' %}
+                                <span class="badge bg-success">Completed</span>
+                            {% elif appointment.status.Status_name == 'Cancelled' %}
+                                <span class="badge bg-secondary">Cancelled</span>
+                            {% endif %}
+                        </p>
+                        {% if appointment.status.Status_name in ['Pending', 'Confirmed'] %}
+                        <a href="{{ url_for('main.cancel_appointment', id=appointment.appointmentID) }}" 
+                           class="btn btn-outline-danger btn-sm w-100"
+                           onclick="return confirm('Cancel this appointment?')">
+                            Cancel Appointment
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <h5>No appointments found</h5>
+            <p class="mb-0">
+                {% if filter_status != 'all' %}
+                    No {{ filter_status }} appointments found.
+                {% else %}
+                    You haven't booked any appointments yet.
+                {% endif %}
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

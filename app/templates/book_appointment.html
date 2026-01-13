@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card shadow">
+            <div class="card-body p-5">
+                <h3 class="card-title mb-4">Book an Appointment</h3>
+                
+                <form method="POST" id="bookingForm">
+                    <div class="mb-4">
+                        <label for="service_id" class="form-label fw-bold">Select Service *</label>
+                        <select class="form-select form-select-lg" id="service_id" name="service_id" required>
+                            <option value="">Choose a service...</option>
+                            {% for service in services %}
+                            <option value="{{ service.service_id }}" 
+                                    data-description="{{ service.description }}"
+                                    data-price="{{ service.price }}">
+                                {{ service.service_name }} - ₱{{ "%.2f"|format(service.price) }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div id="serviceDetails" class="alert alert-info d-none mb-4">
+                        <strong>Service Details:</strong>
+                        <p id="serviceDescription" class="mb-1 mt-2"></p>
+                        <p class="mb-0"><strong>Price:</strong> <span id="servicePrice" class="text-success"></span></p>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label for="date" class="form-label fw-bold">Appointment Date *</label>
+                            <input type="date" class="form-control form-control-lg" id="date" name="date" 
+                                   min="{{ today }}" required>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <label for="time" class="form-label fw-bold">Appointment Time *</label>
+                            <input type="time" class="form-control form-control-lg" id="time" name="time" required>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <strong>📌 Important Notes:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>Please arrive 10 minutes before your scheduled time</li>
+                            <li>Check for time slot availability before booking</li>
+                            <li>You will receive a confirmation notification</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            ✓ Confirm Appointment
+                        </button>
+                        <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const serviceSelect = document.getElementById('service_id');
+    const serviceDetails = document.getElementById('serviceDetails');
+    const serviceDescription = document.getElementById('serviceDescription');
+    const servicePrice = document.getElementById('servicePrice');
+    
+    serviceSelect.addEventListener('change', function() {
+        if (this.value) {
+            const selectedOption = this.options[this.selectedIndex];
+            const description = selectedOption.getAttribute('data-description');
+            const price = selectedOption.getAttribute('data-price');
+            
+            serviceDescription.textContent = description;
+            servicePrice.textContent = '₱' + parseFloat(price).toFixed(2);
+            serviceDetails.classList.remove('d-none');
+        } else {
+            serviceDetails.classList.add('d-none');
+        }
+    });
+    
+    // Pre-select service if coming from homepage
+    const urlParams = new URLSearchParams(window.location.search);
+    const serviceId = urlParams.get('service');
+    if (serviceId) {
+        serviceSelect.value = serviceId;
+        serviceSelect.dispatchEvent(new Event('change'));
+    }
+});
+</script>
+{% endblock %}

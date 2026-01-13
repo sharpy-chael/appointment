@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card shadow">
+            <div class="card-body p-5">
+                <h3 class="card-title mb-4">My Profile</h3>
+                
+                <div class="mb-4 p-3 bg-light rounded">
+                    <label class="form-label text-muted">Email Address</label>
+                    <p class="h5 mb-0">{{ account.email }}</p>
+                </div>
+                
+                <hr class="my-4">
+                
+                <form method="POST">
+                    <h5 class="mb-3 text-primary">Personal Information</h5>
+                    
+                    <div class="mb-3">
+                        <label for="name" class="form-label fw-bold">Full Name</label>
+                        <input type="text" class="form-control form-control-lg" id="name" name="name" 
+                               value="{{ account.user_profile.name }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="address" class="form-label fw-bold">Address</label>
+                        <textarea class="form-control" id="address" name="address" rows="3" required>{{ account.user_profile.address }}</textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="contact" class="form-label fw-bold">Contact Number</label>
+                        <input type="text" class="form-control form-control-lg" id="contact" name="contact" 
+                               value="{{ account.user_profile.contact }}" required>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">Update Profile</button>
+                        <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-secondary">Back to Dashboard</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

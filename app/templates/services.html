@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="text-center mb-4">Our Services</h2>
+        <p class="text-center text-muted mb-5">Choose from our wide range of professional services</p>
+        
+        <div class="row g-4">
+            {% for service in services %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card service-card">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">{{ service.service_name }}</h5>
+                        <p class="card-text text-muted">{{ service.description }}</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="h4 text-success mb-0">₱{{ "%.2f"|format(service.price) }}</span>
+                            {% if session.user_id %}
+                            <a href="{{ url_for('main.book_appointment') }}?service={{ service.service_id }}" 
+                               class="btn btn-primary">Book Now</a>
+                            {% else %}
+                            <a href="{{ url_for('main.login') }}" class="btn btn-outline-primary">Login to Book</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
