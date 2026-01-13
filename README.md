@@ -1,1 +1,1 @@
-For sir Jhunel the creators are Jayson Santoalla, John Michael Nadal and Mekyla Otos
+For Sir Jhunel. The creators are Jayson Santoalla, John Michael Nadal and Mekyla Otos
